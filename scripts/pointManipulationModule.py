@@ -38,7 +38,8 @@ class pointManipulation():
         sin = vec1[0] - vec2[0]
         cos = vec1[1] - vec2[1]
 
-        theta = np.arctan2(sin, cos)       
+        theta = np.arctan2(sin, cos)
+        #need to visualize this theta in order to understand how roll,yaw and pitch are calculated
         #print("\narctan2 value : \n", theta * 180 / np.pi)
 
         return theta

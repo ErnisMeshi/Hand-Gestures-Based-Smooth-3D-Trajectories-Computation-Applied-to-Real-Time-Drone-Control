@@ -166,6 +166,7 @@ class FullControll():
                 # If we get some action from joystick then send rc, else no set anything
                 # because the command me.send_rc_control(0, 0, 0, 0) will be send
                 # in self.tracking.run() function always
+                # need to refactor this getKeyboardInput-> so if the keyboard is not pressed then return None and not [0,0,0,0]
                 vals = self.getKeyboardInput(me, img)
                 if not (vals[0] == vals[1] == vals[2] == vals[3] == 0):
                     me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
@@ -179,15 +180,21 @@ class FullControll():
                 self.normalizedPoints.setArray(lmList)
                 self.normalizedPoints.normalize()
                 self.normalizedPoints.removeHomogeneousCoordinate()
+                # all of these "" self.normalizedPoints.setArray(lmList)
+                #                 self.normalizedPoints.normalize()
+                #                 self.normalizedPoints.removeHomogeneousCoordinate()""
+                # are preprocessing function of a gesture recognition model
 
                 # Hand gesture recognition
                 # we detect after normalization: translate origin, scale wrt max distance
                 img, outputClass, probability = self.gestureDetector.processHands(img, self.normalizedPoints)
 
                 # Scale a little bit
+                # we need to avoid this addHomogeneousCoordinate and remove by delegating responsibilities to different classes
                 self.normalizedPoints.addHomogeneousCoordinate()
-                self.normalizedPoints.scaleLittle()  # ATTUALMENTE INDISPENSABILE PER COMPUTARE BENE ORIENTAMENTO
+                self.normalizedPoints.scaleLittle()  #Currently essential for computing orientation
                 if self.allHandTransformed:
+                    # consider drawing hands before scaling the hand landmarks, this simplifies the code
                     self.normalizedPoints.drawAllHandTransformed(img)
 
                 # Rotate Points, needed to compute yaw and pitch
@@ -196,6 +203,7 @@ class FullControll():
 
                 # Compute Mean point and draw it
                 val = self.normalizedPoints.mean.astype(int)
+                #draw point p
                 cv2.circle(img, (val[0], val[1]), radius=3, color=(0, 255, 0), thickness=3)
 
                 # Compute Orientation

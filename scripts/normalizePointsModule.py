@@ -56,6 +56,7 @@ class normalizePoints():
         x_sum = y_sum = 0
 
         for i in range(len(lmList)):
+            #remember is a list lmList=[[id1, cx1, cy1],[id2, cx2, cy2]]
             # create numpy array point
             tmp[i] = np.array(lmList[i][1:], dtype=np.float32)
 
@@ -66,12 +67,12 @@ class normalizePoints():
             tmp[i] = self.transf.convertOriginBottomLeft(tmp[i])
 
         self.tmp = tmp
-       
+       # self.tmp is a array of hand landmark with coordinates converted with convertOriginBottomLeft method.
         x_mean = x_sum / 21
         y_mean = y_sum / 21
  
         mean = np.array([x_mean, y_mean], dtype=np.float32)
-        self.mean = mean
+        self.mean = mean # is point p
 
 
     def normalize(self):
