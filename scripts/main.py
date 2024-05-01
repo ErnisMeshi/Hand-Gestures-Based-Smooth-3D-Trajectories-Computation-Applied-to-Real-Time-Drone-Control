@@ -515,9 +515,6 @@ class keyboardControl:
 
         print("Takeoff...")
         time.sleep(3)
-
-        # Fly up a bit
-        print("Fly up a bit...")
    
         # Get data from hand
         resTraj = fullControll.run(me)
@@ -540,8 +537,8 @@ class keyboardControl:
             
             if self.points[-1][0] != vals[4] or self.points[-1][1] != vals[5] or self.points[-1][2] != vals[6]:
                 self.points.append((vals[4], vals[5], vals[6]))
-
-            me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
+            # drone is stationary therefore no need to send velocities
+            # me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
             self.drawXYPoints(imgXY)
             self.drawXZPoints(imgXZ)
             cv2.imshow("imgXY",imgXY)
@@ -574,7 +571,7 @@ def main():
 
     # IS ALWAYS isWebcam=True, DRONE FLY, VIDEO RECORDED FROM DRONE AND FROM WEBCAM,
     # DETECTION TRAJECTORY FROM WEBCAM
-    #kc.runDroneWebcam()
+    kc.runDroneWebcam()
 
     # THIS IS TEST, IS ALWAYS isWebcam=True, DRONE DON'T FLY, VIDEO RECORDED FROME DRONE AND FROM WEBCAM
     # DETECTION TRAJECTORY FROM WEBCAM
