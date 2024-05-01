@@ -338,9 +338,9 @@ class keyboardControl:
 
         self.isWebcam = False
 
-        me = tello.Tello()
-        me.connect()
-        print(me.get_battery())
+        drone = tello.Tello()
+        drone.connect()
+        print(drone.get_battery())
 
         # Path for save things
         idx = self.setLastIdx()
@@ -352,22 +352,22 @@ class keyboardControl:
         fullControll.autoSet(path, isWebcam=self.isWebcam, resize=False, showPlot=False)
 
         # Get the stream image
-        me.streamon() # to get the stream image
+        drone.streamon() # to get the stream image
         time.sleep(3)
        
         # Start rec video
-        rec = recVid.recordVideo(me, f"{path}_droneCamera")
+        rec = recVid.recordVideo(drone, f"{path}_droneCamera")
         rec.run()
 
         # Takeoff
-        me.takeoff()
-        time.sleep(3) 
+        drone.takeoff()
+        time.sleep(3)
 
         # Fly up a bit
-        me.send_rc_control(0, 0, 20, 0)
+        drone.send_rc_control(0, 0, 20, 0)
  
         # Get data from hand
-        resTraj = fullControll.run(me)
+        resTraj = fullControll.run(drone)
 
         # Export original data as CSV
         pd.DataFrame(np.array(resTraj)).to_csv(f"{path}_original.csv", index=False, header=None)
@@ -388,7 +388,7 @@ class keyboardControl:
             if self.points[-1][0] != vals[4] or self.points[-1][1] != vals[5] or self.points[-1][2] != vals[6]:
                 self.points.append((vals[4], vals[5], vals[6]))
 
-            me.send_rc_control(vals[0], vals[1], vals[2], vals[3])
+            drone.send_rc_control(vals[0], vals[1], vals[2], vals[3])
             self.drawXYPoints(imgXY)
             self.drawXZPoints(imgXZ)
             cv2.imshow("imgXY",imgXY)
@@ -400,7 +400,7 @@ class keyboardControl:
 
         # Stop recording
         rec.stop()
-        me.streamoff()
+        drone.streamoff()
 
 
     def runDroneWebcam(self):
