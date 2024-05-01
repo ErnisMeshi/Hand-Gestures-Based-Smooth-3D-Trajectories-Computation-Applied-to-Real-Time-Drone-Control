@@ -141,22 +141,19 @@ class keyboardControl:
         if kp.getKey("LEFT"): 
             lr = -speed
             d = self.dInterval
-            a = -180
+
 
         elif kp.getKey("RIGHT"): 
             lr = speed
             d = -self.dInterval
-            a = 180
 
         if kp.getKey("UP"):  # this is forward, not up...
             fb = speed
             d = self.dInterval
-            a = 270
 
         elif kp.getKey("DOWN"): # this is backward, not down...
             fb = -speed
             d = -self.dInterval
-            a = -90
 
         if kp.getKey("w"): 
             ud = speed
