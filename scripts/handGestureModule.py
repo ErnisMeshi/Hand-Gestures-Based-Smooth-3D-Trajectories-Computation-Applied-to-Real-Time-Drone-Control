@@ -12,13 +12,17 @@ import pdb
 class handGestureRecognition():
 
     # To train a new model look at "3. Hand gesture recognition.ipynb" use as kernel tfod
+    current_file_path = os.path.abspath(__file__)
 
-    lastModel = "1642981324" # COPY THE FOLDER NAME OF Tensorflow/workspace/models/my_hand_gesture_model
-    
-    if os.name == 'posix': # if linux system
-        export_path = str.encode(os.path.join("/home/usiusi/catkin_ws/src/DJI-Tello-3D-Hand-Gesture-control/Tensorflow/workspace/models/my_hand_gesture_model", lastModel)) # must be in bytes
-    elif os.name == 'nt': # if windows system
-        export_path = str.encode(os.path.join("Tensorflow","workspace", "models", "my_hand_gesture_model", lastModel)) # must be in bytes
+    # Get the parent directory of the current file
+    parent_directory = os.path.dirname(current_file_path)
+    model_path=os.path.join(parent_directory,'gesture_recognition_model')
+    export_path = str.encode(model_path)  # must be in bytes
+
+    # if os.name == 'posix': # if linux system
+    #     export_path = str.encode(model_path) # must be in bytes
+    # elif os.name == 'nt': # if windows system
+    #     export_path = str.encode(model_path)
 
     #SPECIES = ['stop', 'onefingerup', 'twofingerup', 'thumbsup']
     SPECIES = ['backward', 'detect', 'down', 'forward', 'land', 'left', 'ok', 'right', 'stop', 'up']
@@ -28,7 +32,7 @@ class handGestureRecognition():
     def __init__(self):
 
         # Loading the estimator
-        self.predict_fn = tf.saved_model.load(self.export_path).signatures['predict']
+        self.model = tf.saved_model.load(self.export_path).signatures['predict']
 
 
     def processHands(self, img, handPoints):
@@ -73,7 +77,7 @@ class handGestureRecognition():
         examples = tf.constant(examples)
 
         # make predictions of all testset
-        predictions = self.predict_fn(examples=examples)
+        predictions = self.model(examples=examples)
 
         return predictions
 
